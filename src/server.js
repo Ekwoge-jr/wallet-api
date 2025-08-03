@@ -4,10 +4,13 @@ import { initDB } from "./config/db.js";
 import ratelimiter from "./middleware/rateLimiter.js";
 
 import transactionsRoute from "./routes/transactionsRoute.js"
+import job from "./config/cron.js";
 
 dotenv.config();
 
 const app = express();
+
+if(process.env.NODE_ENV === "production") job.start();
 
 //middleware
 app.use(ratelimiter);
@@ -17,12 +20,12 @@ const PORT = process.env.PORT || 5001;
 
 
 
-/*
+
 //can use this code to check if my API is running
-app.get("/health", (req, res) => {
-    res.send("its working");
+app.get("/api/health", (req, res) => {
+    res.status(200).json({status: "ok"});
 });
-*/
+
 
 //routes to the transactionsRoute.js file, where all the api's are and also, 
 //the /api/transactions now serves as a prefix for each endpoint 
